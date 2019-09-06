@@ -234,7 +234,7 @@ dss_settings["sparkSettings"]["executionConfigs"]=default_spark_config
 
 r = requests.put(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(dss_settings), verify=False)
 print r.text
-prin "Configuration Complete!"' > modify_global_config.py
+print "Configuration Complete!"' > modify_global_config.py
 
 python ./modify_global_config.py
 
