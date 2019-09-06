@@ -44,7 +44,7 @@ echo -----------------------------
 sudo su - $DSS_USER <<'EOF'
 source /opt/dataiku/variable.sh
 cd /opt/dataiku
-kinit -kt /opt/dataiku/security/dataiku.keytab dataiku@TRAINING.DATAIKU.COM
+kinit -kt /opt/dataiku/security/$DSS_USER.keytab $DSS_USER@TRAINING.DATAIKU.COM
 ./auto_dir/bin/dssadmin install-hadoop-integration -keytab /data/$DSS_USER/$DSS_USER.keytab -principal $DSS_USER@TRAINING.DATAIKU.COM
 EOF
 
