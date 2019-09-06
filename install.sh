@@ -44,6 +44,7 @@ echo -----------------------------
 sudo su - $DSS_USER <<'EOF'
 source /opt/dataiku/variable.sh
 cd /opt/dataiku
+kdestroy
 kinit -kt /opt/dataiku/security/$DSS_USER.keytab $DSS_USER@TRAINING.DATAIKU.COM
 klist -e
 ./auto_dir/bin/dssadmin install-hadoop-integration -keytab /data/$DSS_USER/$DSS_USER.keytab -principal $DSS_USER@TRAINING.DATAIKU.COM
@@ -91,8 +92,8 @@ cd /opt/dataiku
 ./auto_dir/bin/dss start 
 EOF
 
-echo "sleeping 30s to allow DSS to start"
-sleep 30
+echo "sleeping 10s to allow DSS to start"
+sleep 10
 echo "awake!"
 
 echo -----------------------------
@@ -104,10 +105,10 @@ source /opt/dataiku/variable.sh
 cd /opt/dataiku
 AUTO_JSON=$(./auto_dir/bin/dsscli api-key-create --output json --admin true --description "admin key for automation node setup script" --label "auto_script_key")
 echo "export AUTO_KEY=$(echo $AUTO_JSON | jq '.[] | .key')" >> /opt/dataiku/variable.sh
+cho $AUTO_KEY
 EOF
 
 source /opt/dataiku/variable.sh
-echo $AUTO_KEY
 
 echo -----------------------------
 echo Create Sql connection
@@ -161,7 +162,7 @@ API_KEY=os.environ["AUTO_KEY"]
 r = requests.get(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, verify=False)
 hdfs_conn=json.loads(r.text)
 
-hdfs_conn["params"]["aclSynchronizationMode"] = "None"
+hdfs_conn["params"]["aclSynchronizationMode"] = "NONE"
 hdfs_conn["params"]["namingRule"] = {
     "hdfsPathDatasetNamePrefix": "${projectKey}/",
     "tableNameDatasetNamePrefix": "${projectKey}_",
@@ -232,7 +233,8 @@ dss_settings["hiveSettings"]=hive_settings
 dss_settings["sparkSettings"]["executionConfigs"]=default_spark_config
 
 r = requests.put(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(dss_settings), verify=False)
-print r.text' > modify_global_config.py
+print r.text
+prin "Configuration Complete!"' > modify_global_config.py
 
 python ./modify_global_config.py
 
@@ -246,5 +248,6 @@ source /opt/dataiku/variable.sh
 cd /opt/dataiku
 ./auto_dir/bin/dsscli group-create --description "Data Scientists from Business X" --source-type LOCAL --may-create-project true --may-write-unsafe-code true --may-write-safe-code true --may-create-code-envs true --may-develop-plugins true --may-create-published-api-services true biz_x_data_scientists
 ./auto_dir/bin/dsscli user-create --source-type LOCAL --display-name $YOUR_DSS_USER --user-profile DATA_SCIENTIST --group biz_x_data_scientists $YOUR_DSS_USER $YOUR_USER_PASSWORD
+echo "Finished with User and Group Creation!"
 EOF
 
