@@ -5,7 +5,7 @@ echo "export DSS_USER=<DSS_USER>" > /opt/dataiku/variable.sh
 echo "export YOUR_DSS_USER=<YOUR_DSS_USER>" >> /opt/dataiku/variable.sh
 echo "export YOUR_USER_PASSWORD=<YOUR_USER_PASSWORD>" >> /opt/dataiku/variable.sh
 echo "export HIVESERVER2_HOST=<HIVESERVER2_HOST>" >> /opt/dataiku/variable.sh
-dcho "export DSS_VERSION=<DSS_VERSION>" >> /opt/dataiku/variable.sh
+echo "export DSS_VERSION=<DSS_VERSION>" >> /opt/dataiku/variable.sh
 chmod 777 /opt/dataiku/variable.sh
 EOF
 
@@ -106,7 +106,7 @@ source /opt/dataiku/variable.sh
 cd /opt/dataiku
 AUTO_JSON=$(./auto_dir/bin/dsscli api-key-create --output json --admin true --description "admin key for automation node setup script" --label "auto_script_key")
 echo "export AUTO_KEY=$(echo $AUTO_JSON | jq '.[] | .key')" >> /opt/dataiku/variable.sh
-cho $AUTO_KEY
+echo $AUTO_KEY
 EOF
 
 source /opt/dataiku/variable.sh
