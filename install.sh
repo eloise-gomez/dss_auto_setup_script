@@ -106,6 +106,7 @@ source /opt/dataiku/variable.sh
 cd /opt/dataiku
 AUTO_JSON=$(./auto_dir/bin/dsscli api-key-create --output json --admin true --description "admin key for automation node setup script" --label "auto_script_key")
 echo "export AUTO_KEY=$(echo $AUTO_JSON | jq '.[] | .key')" >> /opt/dataiku/variable.sh
+source /opt/dataiku/variable.sh
 echo $AUTO_KEY
 EOF
 
@@ -141,9 +142,9 @@ DATA = {
     }
 
 r = requests.post(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(DATA), verify=False)
-print r.text' > create_postgres_conn.py
+print r.text' > /tmp/create_postgres_conn.py
 
-python ./create_postgres_conn.py
+python /tmp/create_postgres_conn.py
 
 
 echo -----------------------------
@@ -172,9 +173,9 @@ hdfs_conn["params"]["namingRule"] = {
 }
 
 r = requests.put(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(hdfs_conn), verify=False)
-print r.text' > update_hdfs_conn.py
+print r.text' > /tmp/update_hdfs_conn.py
 
-python ./update_hdfs_conn.py
+python /tmp/update_hdfs_conn.py
 
 
 echo -----------------------------
@@ -235,9 +236,9 @@ dss_settings["sparkSettings"]["executionConfigs"]=default_spark_config
 
 r = requests.put(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(dss_settings), verify=False)
 print r.text
-print "Configuration Complete!"' > modify_global_config.py
+print "Configuration Complete!"' > /tmp/modify_global_config.py
 
-python ./modify_global_config.py
+python /tmp/modify_global_config.py
 
 
 echo -----------------------------
