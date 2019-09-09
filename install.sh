@@ -81,7 +81,7 @@ echo "export INSTALL_ID=$(cat ./auto_dir/install.ini | grep installid | awk -F' 
 EOF
 
 source /opt/dataiku/variable.sh
-sudo sed -i "s/allowed_user_groups =/allowed_user_groups = ${DSS_USER}_users/" /etc/dataiku-security/$INSTALL_ID/security-config.ini
+sudo sed -i "s/allowed_user_groups =/allowed_user_groups = ${DSS_USER}-users/" /etc/dataiku-security/$INSTALL_ID/security-config.ini
 sudo cat /etc/dataiku-security/$INSTALL_ID/security-config.ini
 
 echo -----------------------------
