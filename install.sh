@@ -5,6 +5,7 @@ echo "export DSS_USER=<DSS_USER>" > /opt/dataiku/variable.sh
 echo "export YOUR_DSS_USER=<YOUR_DSS_USER>" >> /opt/dataiku/variable.sh
 echo "export YOUR_USER_PASSWORD=<YOUR_USER_PASSWORD>" >> /opt/dataiku/variable.sh
 echo "export HIVESERVER2_HOST=<HIVESERVER2_HOST>" >> /opt/dataiku/variable.sh
+dcho "export DSS_VERSION=<DSS_VERSION>" >> /opt/dataiku/variable.sh
 chmod 777 /opt/dataiku/variable.sh
 EOF
 
@@ -18,11 +19,11 @@ source /opt/dataiku/variable.sh
 sudo su - $DSS_USER <<'EOF'
 source /opt/dataiku/variable.sh
 cd /opt/dataiku
-./dataiku-dss-5.1.3/installer.sh -t automation -d /opt/dataiku/auto_dir -p 12000 -l /data/$DSS_USER/license.json
+./dataiku-dss-$DSS_VERSION/installer.sh -t automation -d /opt/dataiku/auto_dir -p 12000 -l /data/$DSS_USER/license.json
 EOF
 
 source /opt/dataiku/variable.sh
-sudo -i "/opt/dataiku/dataiku-dss-5.1.3/scripts/install/install-boot.sh" "/opt/dataiku/auto_dir" $DSS_USER
+sudo -i "/opt/dataiku/dataiku-$DSS_VERSION/scripts/install/install-boot.sh" "/opt/dataiku/auto_dir" $DSS_USER
 sudo yum install -y jq
 
 ## Uncomment if you installed R integration and want to do so on the Automation Node as well
@@ -45,7 +46,7 @@ sudo su - $DSS_USER <<'EOF'
 source /opt/dataiku/variable.sh
 cd /opt/dataiku
 kdestroy
-kinit -kt /opt/dataiku/security/$DSS_USER.keytab $DSS_USER@TRAINING.DATAIKU.COM
+kinit -kt /data/$DSS_USER/$DSS_USER.keytab $DSS_USER@TRAINING.DATAIKU.COM
 klist -e
 ./auto_dir/bin/dssadmin install-hadoop-integration -keytab /data/$DSS_USER/$DSS_USER.keytab -principal $DSS_USER@TRAINING.DATAIKU.COM
 EOF
