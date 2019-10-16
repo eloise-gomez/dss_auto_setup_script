@@ -1,12 +1,12 @@
 #!/bin/bash
 
 sudo -i <<'EOF'
-echo "export DSS_USER=<DSS_USER>" > /opt/dataiku/variable.sh
-echo "export YOUR_DSS_USER=<YOUR_DSS_USER>" >> /opt/dataiku/variable.sh
-echo "export YOUR_USER_PASSWORD=<YOUR_USER_PASSWORD>" >> /opt/dataiku/variable.sh
-echo "export HIVESERVER2_HOST=<HIVESERVER2_HOST>" >> /opt/dataiku/variable.sh
-echo "export DSS_VERSION=<DSS_VERSION>" >> /opt/dataiku/variable.sh
-chmod 777 /opt/dataiku/variable.sh
+echo "export DSS_USER=<DSS_USER>" > /data/dataiku/variable.sh
+echo "export YOUR_DSS_USER=<YOUR_DSS_USER>" >> /data/dataiku/variable.sh
+echo "export YOUR_USER_PASSWORD=<YOUR_USER_PASSWORD>" >> /data/dataiku/variable.sh
+echo "export HIVESERVER2_HOST=<HIVESERVER2_HOST>" >> /data/dataiku/variable.sh
+echo "export DSS_VERSION=<DSS_VERSION>" >> /data/dataiku/variable.sh
+chmod 777 /data/dataiku/variable.sh
 EOF
 
 
@@ -14,16 +14,16 @@ echo -----------------------------
 echo Install automation node
 echo -----------------------------
 
-source /opt/dataiku/variable.sh
+source /data/dataiku/variable.sh
 
 sudo su - $DSS_USER <<'EOF'
-source /opt/dataiku/variable.sh
-cd /opt/dataiku
-./dataiku-dss-$DSS_VERSION/installer.sh -t automation -d /opt/dataiku/auto_dir -p 12000 -l /data/$DSS_USER/license.json
+source /data/dataiku/variable.sh
+cd /data/dataiku
+./dataiku-dss-$DSS_VERSION/installer.sh -t automation -d /data/dataiku/auto_dir -p 12000 -l /data/$DSS_USER/license.json
 EOF
 
-source /opt/dataiku/variable.sh
-sudo -i "/opt/dataiku/dataiku-$DSS_VERSION/scripts/install/install-boot.sh" "/opt/dataiku/auto_dir" $DSS_USER
+source /data/dataiku/variable.sh
+sudo -i "/data/dataiku/dataiku-$DSS_VERSION/scripts/install/install-boot.sh" "/data/dataiku/auto_dir" $DSS_USER
 sudo yum install -y jq
 
 ## Uncomment if you installed R integration and want to do so on the Automation Node as well
@@ -32,8 +32,8 @@ sudo yum install -y jq
 #echo -----------------------------
 #
 #sudo su  $DSS_USER <<'EOF'
-#source /opt/dataiku/variable.sh
-#cd /opt/dataiku
+#source /data/dataiku/variable.sh
+#cd /data/dataiku
 #./auto_dir/bin/dssadmin install-R-integration
 #EOF
 
@@ -43,8 +43,8 @@ echo Install hadoop integration
 echo -----------------------------
 
 sudo su - $DSS_USER <<'EOF'
-source /opt/dataiku/variable.sh
-cd /opt/dataiku
+source /data/dataiku/variable.sh
+cd /data/dataiku
 kdestroy
 kinit -kt /data/$DSS_USER/$DSS_USER.keytab $DSS_USER@TRAINING.DATAIKU.COM
 klist -e
@@ -57,8 +57,8 @@ echo Install Spark integration
 echo -----------------------------
 
 sudo su - $DSS_USER <<'EOF'
-source /opt/dataiku/variable.sh
-cd /opt/dataiku
+source /data/dataiku/variable.sh
+cd /data/dataiku
 ./auto_dir/bin/dssadmin install-spark-integration
 EOF
 
@@ -66,8 +66,8 @@ EOF
 echo -----------------------------
 echo Install multiUserSecurity
 echo -----------------------------
-source /opt/dataiku/variable.sh
-sudo /opt/dataiku/auto_dir/bin/dssadmin install-impersonation $DSS_USER
+source /data/dataiku/variable.sh
+sudo /data/dataiku/auto_dir/bin/dssadmin install-impersonation $DSS_USER
 
 
 echo -----------------------------
@@ -75,12 +75,12 @@ echo Set up multiUserSecurity
 echo -----------------------------
 
 sudo su - $DSS_USER <<'EOF'
-source /opt/dataiku/variable.sh
-cd /opt/dataiku
+source /data/dataiku/variable.sh
+cd /data/dataiku
 echo "export INSTALL_ID=$(cat ./auto_dir/install.ini | grep installid | awk -F' = ' '{print $2}')" >> /opt/dataiku/variable.sh
 EOF
 
-source /opt/dataiku/variable.sh
+source /data/dataiku/variable.sh
 sudo sed -i "s/allowed_user_groups =/allowed_user_groups = ${DSS_USER}-users/" /etc/dataiku-security/$INSTALL_ID/security-config.ini
 sudo cat /etc/dataiku-security/$INSTALL_ID/security-config.ini
 
@@ -89,7 +89,7 @@ echo Start automation node
 echo -----------------------------
 
 sudo su - $DSS_USER <<'EOF'
-cd /opt/dataiku
+cd /data/dataiku
 ./auto_dir/bin/dss start 
 EOF
 
@@ -102,21 +102,21 @@ echo Generate API Key
 echo -----------------------------
 
 sudo su - $DSS_USER <<'EOF'
-source /opt/dataiku/variable.sh
-cd /opt/dataiku
+source /data/dataiku/variable.sh
+cd /data/dataiku
 AUTO_JSON=$(./auto_dir/bin/dsscli api-key-create --output json --admin true --description "admin key for automation node setup script" --label "auto_script_key")
-echo "export AUTO_KEY=$(echo $AUTO_JSON | jq '.[] | .key')" >> /opt/dataiku/variable.sh
-source /opt/dataiku/variable.sh
+echo "export AUTO_KEY=$(echo $AUTO_JSON | jq '.[] | .key')" >> /data/dataiku/variable.sh
+source /data/dataiku/variable.sh
 echo $AUTO_KEY
 EOF
 
-source /opt/dataiku/variable.sh
+source /data/dataiku/variable.sh
 
 echo -----------------------------
 echo Create Sql connection
 echo ----------------------------
 
-source /opt/dataiku/variable.sh
+source /data/dataiku/variable.sh
 echo ' 
 import requests
 import json
@@ -151,7 +151,7 @@ echo -----------------------------
 echo Update HDFS connection
 echo ----------------------------
 
-source /opt/dataiku/variable.sh
+source /data/dataiku/variable.sh
 echo ' 
 import requests
 import json
@@ -182,7 +182,7 @@ echo -----------------------------
 echo Configure DSS - Hadoop, Spark, and MUS
 echo -----------------------------
 
-source /opt/dataiku/variable.sh
+source /data/dataiku/variable.sh
 echo ' 
 import requests
 import json
@@ -246,8 +246,8 @@ echo Create User and Group User and Group
 echo -----------------------------
 
 sudo su - $DSS_USER <<'EOF'
-source /opt/dataiku/variable.sh
-cd /opt/dataiku
+source /data/dataiku/variable.sh
+cd /data/dataiku
 ./auto_dir/bin/dsscli group-create --description "Data Scientists from Business X" --source-type LOCAL --may-create-project true --may-write-unsafe-code true --may-write-safe-code true --may-create-code-envs true --may-develop-plugins true --may-create-published-api-services true biz_x_data_scientists
 ./auto_dir/bin/dsscli user-create --source-type LOCAL --display-name $YOUR_DSS_USER --user-profile DATA_SCIENTIST --group biz_x_data_scientists $YOUR_DSS_USER $YOUR_USER_PASSWORD
 echo "Finished with User and Group Creation!"
