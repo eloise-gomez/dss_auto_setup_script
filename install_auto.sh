@@ -249,7 +249,7 @@ sudo su - $DSS_USER <<'EOF'
 source /data/dataiku/variable.sh
 cd /data/dataiku
 ./auto_dir/bin/dsscli group-create --description "Data Scientists from Business X" --source-type LOCAL --may-create-project true --may-write-unsafe-code true --may-write-safe-code true --may-create-code-envs true --may-develop-plugins true --may-create-published-api-services true biz_x_data_scientists
-./auto_dir/bin/dsscli user-create --source-type LOCAL --display-name $YOUR_DSS_USER --user-profile DATA_SCIENTIST --group biz_x_data_scientists $YOUR_DSS_USER $YOUR_USER_PASSWORD
+./auto_dir/bin/dsscli user-create --source-type LOCAL --display-name $YOUR_DSS_USER --user-profile DESIGNER --group biz_x_data_scientists $YOUR_DSS_USER $YOUR_USER_PASSWORD
 echo "Finished with User and Group Creation!"
 EOF
 
