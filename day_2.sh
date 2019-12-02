@@ -22,8 +22,8 @@ source /tmp/variable.sh
 rm -f /tmp/variable.sh
 echo "export DSS_USER=$DSS_USER" > /tmp/variable.sh
 echo "export DSS_VERSION=$DSS_VERSION" >> /tmp/variable.sh
-echo "export YOUR_DSS_USER=$YOUR_DSS_USER" > /tmp/variable.sh
-echo "export YOUR_USER_PASSWORD=$YOUR_USER_PASSWORD" > /tmp/variable.sh
+echo "export YOUR_DSS_USER=$YOUR_DSS_USER" >> /tmp/variable.sh
+echo "export YOUR_USER_PASSWORD=$YOUR_USER_PASSWORD" >> /tmp/variable.sh
 echo "export DSS_DEPLOYER_URL=$DSS_DEPLOYER_URL" >> /tmp/variable.sh
 echo "export DSS_MONITOR_URL=$DSS_MONITOR_URL" >> /tmp/variable.sh
 chmod 777 /tmp/variable.sh
