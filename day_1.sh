@@ -506,7 +506,7 @@ echo -----------------------------
 echo  Add Nginx Entries 
 echo -----------------------------
 
-sudo sed -i "s/types_hash_max_size 2048;/types_hash_max_size 2048;\n   server_names_hash_bucket_size  128;/g" /etc/nginx/nginx.conf
+sudo sed -i "s/types_hash_max_size 2048;/types_hash_max_size 2048;\n    server_names_hash_bucket_size  128;/g" /etc/nginx/nginx.conf
 
 sudo -i <<'EOF'
 source /tmp/variable.sh
