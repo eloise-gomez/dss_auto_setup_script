@@ -254,19 +254,6 @@ cd /data/dataiku
 echo "Finished with User and Group Creation!"
 EOF
 
-#echo -----------------------------
-#echo Set up nginx config for Design
-#echo -----------------------------
-#
-#sudo -i <<'EOF'
-#source /tmp/variable.sh
-#cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bkup
-#sh -c 'tac /etc/nginx/nginx.conf | sed "3s/$/server \{ listen 80; server_name $DSS_DESIGN_URL; location \/ \{ proxy_pass http:\/\/localhost:11000\/; proxy_redirect off; proxy_read_timeout 3600; proxy_send_timeout 600; client_max_body_size 0; proxy_http_version 1\.1; proxy_set_header Host \$http_host; proxy_set_header Upgrade \$http_upgrade; proxy_set_header Connection "upgrade"; \} \}/" | tac > /etc/nginx/nginx.conf'
-#systemctl restart nginx
-#cat /etc/nginx/nginx.conf
-#echo "Finished with modifying nginx configuration!"
-#EOF
-
 
 echo -----------------------------
 echo Reset design variables
