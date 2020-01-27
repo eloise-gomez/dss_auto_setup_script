@@ -182,6 +182,7 @@ hdfs_conn["params"]["namingRule"] = {
     "hiveDatabaseName": "%s" %os.environ["DSS_USER"],
     "uploadsPathPrefix": "uploads"
 }
+hdfs_conn["detailsReadability"]["readableBy"] = "ALL"
 r = requests.put(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(hdfs_conn), verify=False)
 print r.text' > /tmp/update_hdfs_conn.py
 
