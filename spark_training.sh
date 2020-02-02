@@ -298,6 +298,48 @@ echo "Finished with User and Group Creation!"
 EOF
 
 echo -----------------------------
+echo  Add Nginx Entries 
+echo -----------------------------
+
+sudo sed -i "s/types_hash_max_size 2048;/types_hash_max_size 2048;\n    server_names_hash_bucket_size  128;/g" /etc/nginx/nginx.conf
+
+sudo -i <<'EOF'
+source /tmp/variable.sh
+echo '
+import os
+server_name = os.environ["DSS_DESIGN_URL"]
+server_conf_design = """
+    server { 
+        listen 80; 
+        server_name %s; 
+        location / { 
+            proxy_pass http://localhost:11000/; 
+            proxy_redirect off; 
+            proxy_read_timeout 3600; 
+            proxy_send_timeout 600; 
+            client_max_body_size 0; 
+            proxy_http_version 1.1;
+            proxy_set_header Host $http_host; 
+            proxy_set_header Upgrade $http_upgrade; 
+            proxy_set_header Connection "upgrade"; 
+            } 
+        }
+""" %server_name
+with open("/etc/nginx/nginx.conf", "r") as f: 
+    contents = f.readlines()
+f.close()
+contents.insert(len(contents)-2, server_conf_design)
+contents = "".join(contents)
+with open("/etc/nginx/nginx.conf", "w") as f: 
+    f.write(contents)
+f.close 
+' > /tmp/modify_nginx.py
+python /tmp/modify_nginx.py
+cat /etc/nginx/nginx.conf 
+systemctl restart nginx
+EOF
+
+echo -----------------------------
 echo install python packages
 echo -----------------------------
 
