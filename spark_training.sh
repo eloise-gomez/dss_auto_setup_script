@@ -225,7 +225,7 @@ DATA = {
             }
         }
 
-r = requests.post(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(DATA), verify=false)
+r = requests.post(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(DATA), verify=False)
 ' > /tmp/update_hdfs_conn.py
 
 python /tmp/update_hdfs_conn.py
