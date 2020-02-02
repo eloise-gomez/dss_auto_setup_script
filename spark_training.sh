@@ -2,7 +2,7 @@
 
 sudo -i <<'EOF'
 export TRAINING_NAME=<TRAINING_ENV_NAME>
-export README=$(sudo find /data/ -name "README.txt")
+export README=$(sudo find /data/dss*/ -name "README.txt")
 export DSS_USER=$(sudo sh -c "sed -n 's/Hive database:          //p' < $README")
 export HIVESERVER2_HOST=$(sudo sh -c "sed -n 's/Hiverserver host:       //p' < $README")
 
