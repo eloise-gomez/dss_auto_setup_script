@@ -204,7 +204,6 @@ PATH="/admin/connections/"
 DATA = {
             "params": {
                 "root": "/user/%s/dss_managed_datasets" %os.environ["DSS_USER"],
-                "hiveSynchronizationMode": CONN_HIVE_SYNC,
                 "defaultDatabase": "%s" %os.environ["DSS_USER"],
                 "namingRule": {
                     "hdfsPathDatasetNamePrefix": "${projectKey}/",
