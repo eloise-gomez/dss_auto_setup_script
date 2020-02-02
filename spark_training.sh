@@ -205,13 +205,13 @@ DATA = {
             "params": {
                 "root": "/user/%s/dss_managed_datasets" %os.environ["DSS_USER"],
                 "hiveSynchronizationMode": CONN_HIVE_SYNC,
-                "defaultDatabase": "%s" %os.environ["DSS_USER"],,
+                "defaultDatabase": "%s" %os.environ["DSS_USER"],
                 "namingRule": {
                     "hdfsPathDatasetNamePrefix": "${projectKey}/",
                     "tableNameDatasetNamePrefix": "${projectKey}_",
                     "hiveDatabaseName": "%s" %os.environ["DSS_USER"],
                     "uploadsPathPrefix": "uploads"
-                }
+                },
                 "aclSynchronizationMode": "NONE",
                 "clearMode": "DSS_USER",
             },
@@ -230,13 +230,6 @@ r = requests.post(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"ap
 ' > /tmp/update_hdfs_conn.py
 
 python /tmp/update_hdfs_conn.py
-
-
-echo -----------------------------
-echo Create and Configure HDFS connection hdfs_replace_me -- design 
-echo ----------------------------
-
-
 
 echo -----------------------------
 echo Configure DSS - Hadoop, Spark, and MUS -- design
