@@ -243,8 +243,11 @@ import os
 HOST = "http://localhost:11000/public/api"
 PATH="/admin/general-settings/"
 API_KEY=os.environ["AUTO_KEY"]
+
 r = requests.get(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, verify=False)
 dss_settings=json.loads(r.text)
+sparkSettings = dss_settings["sparkSettings"]
+
 user_mapping ={
     "dssUser": os.environ["YOUR_DSS_USER"],
     "type": "SINGLE_MAPPING",
@@ -261,7 +264,9 @@ group_mapping = {
 default_spark_config = [
     {"name" : "default",
      "description": " default configuration",
-     "conf": [{"key":"spark.master", "value": "yarn-client"}]
+     "conf": [{"key":"spark.master", "value": "yarn-client"},
+              {"key":"spark.dynamicAllocation.enabled", "value": "false"}  
+     ]
     }
 ]
 hive_settings = {
@@ -274,10 +279,15 @@ hive_settings = {
     "hiveServer2Principal": "hive/_HOST@TRAINING.DATAIKU.COM",
     "useURL": False
 }
+interactive_spark_engine = "SPARK_SUBMIT"
+
+sparkSettings["executionConfigs"]=default_spark_config
+sparkSettings["interactiveExecutionEngine"]=interactive_spark_engine
+
 dss_settings["impersonation"]["userRules"].insert(0,user_mapping)
 dss_settings["impersonation"]["groupRules"].insert(0,group_mapping)
 dss_settings["hiveSettings"]=hive_settings
-dss_settings["sparkSettings"]["executionConfigs"]=default_spark_config
+dss_settings["sparkSettings"]=sparkSettings
 r = requests.put(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(dss_settings), verify=False)
 print r.text
 print "Configuration Complete!"' > /tmp/modify_global_config.py
