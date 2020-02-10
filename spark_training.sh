@@ -286,6 +286,29 @@ python /tmp/modify_global_config.py
 
 
 echo -----------------------------
+echo Configure DSS - Global Variables
+echo -----------------------------
+
+source /tmp/variable.sh
+echo ' 
+import requests
+import json
+import os 
+HOST = "http://localhost:11000/public/api"
+PATH="/admin/variables/"
+API_KEY=os.environ["AUTO_KEY"]
+DSS_USER=os.environ["DSS_USER"]
+
+dss_variables = {"dss_user": "%s" %DSS_USER}
+
+r = requests.put(url=HOST+PATH, auth=(API_KEY, ""), headers={"Content-Type":"application/json"}, data=json.dumps(dss_variables), verify=False)
+print r.text
+print "Global Variables Set!"' > /tmp/modify_global_variables.py
+
+python /tmp/modify_global_variables.py
+
+
+echo -----------------------------
 echo Create User and Group User and Group -- design
 echo -----------------------------
 
